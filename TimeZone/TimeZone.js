@@ -36,21 +36,14 @@
       timeZone = -8;
     }
 
-    var d = new Date(timestamp);
-    // 将时分秒毫秒设为0
-    d.setUTCHours(timeZone);
-    d.setUTCMinutes(0);
-    d.setUTCSeconds(0);
-    d.setUTCMilliseconds(0);
-
-    return Math.round(d / 1000);
+    return Math.round((Math.floor((timestamp - timeZone * 60 * 60 * 1000)/(24 * 60 * 60 * 1000)) * 24 * 60 * 60 * 1000 + timeZone * 60 * 60 * 1000) / 1000);
   };
 
   /**
    * 将时间戳转换成指定时区的时间格式
    * @param { Number } timestamp, 时间戳，秒
    * @param { Number } timeZone, 时间 东区为负，西区为正，如东8区，-8，默认东8区
-   * @param { String } formatStr, 时间格式 YYYY-MM-DD hh:mm:ss
+   * @param { String } formatStr, 时间格式 YYYY-MM-DD hh:mm:ss 区分大小写
    * @return { string } 时间格式
    */
   TimeZone.formatTimeStamp = function(timestamp, timeZone, formatStr) {
@@ -95,7 +88,7 @@
    * @param { Number } startTimestamp, 开始时间戳，秒
    * @param { Number } endTimestamp, 结束时间戳，秒
    * @param { Number } timeZone, 时间 东区为负，西区为正，如东8区，-8，默认东8区
-   * @param { String } formatStr, 时间格式 YYYY-MM-DD hh:mm:ss
+   * @param { String } formatStr, 时间格式 YYYY-MM-DD hh:mm:ss 区分大小写
    * @return { string } 时间格式
    */
   TimeZone.getDaysZeroList = function(startTimestamp, endTimestamp, timeZone, formatStr) {
@@ -122,6 +115,62 @@
     }
 
     return daysZeroList;
+  };
+
+  /**
+   * 获取时间戳，指定时间里面的每周开始和结束零点时间戳
+   * @param { Number } timestamp, 结束时间戳，秒
+   * @param { Number } timeZone, 时间 东区为负，西区为正，如东8区，-8，默认东8区
+   * @param { Boolean } isMonday, 星期一是否是一天开始
+   * @param { Number } weekNum, 获取的周数
+   * @param { String } formatStr, 时间格式 YYYY-MM-DD hh:mm:ss 区分大小写
+   * @return { string } 时间格式
+   */
+  TimeZone.getWeekTimestamp = function(timestamp, timeZone, isMonday, weekNum, formatStr) {
+    // 默认时间
+    if(typeof timeZone === 'undefined'){
+      timeZone = -8;
+    }
+    // 获取零点时间
+    timestamp = TimeZone.getZeroByTimestamp(timestamp, timeZone);
+
+    // 周数
+    if(typeof weekNum === 'undefined'){
+      weekNum = 1;
+    }
+
+    // 默认格式
+    formatStr = formatStr || TimeZone.formatStr;
+
+    // 时间转换
+    var utcTimestamp = timestamp - timeZone * 60 * 60;
+    // 获取当天星期几，默认星期日为0
+    var day = new Date(utcTimestamp * 1000).getUTCDay();
+    var weeks = [];
+    var startTimestamp = 0; // 开始时间
+
+    // 如果是从星期一开始
+    if(isMonday){
+      day = day === 0 ? 7 : day;
+      startTimestamp = timestamp - 86400 * (day - 1);
+    } else {
+      day = day === 0 ? 0 : day;
+      startTimestamp = timestamp - 86400 * day;
+    }
+
+    for(var i = 0; i < weekNum; i++){
+      var tmpStartTimestamp = startTimestamp - 86400 * 7 * i; // 按周递减
+      var endTimestamp = tmpStartTimestamp + 86400 * 7 - 1; // 加一周时间
+      var item = {
+        startTimestamp: tmpStartTimestamp,
+        endTimestamp: endTimestamp,
+        startTimestampStr: TimeZone.formatTimeStamp(tmpStartTimestamp, timeZone, formatStr),
+        endTimestampStr: TimeZone.formatTimeStamp(endTimestamp, timeZone, formatStr)
+      }
+      weeks.push(item);
+    }
+
+    return weeks;
   };
 
   window.TimeZone = TimeZone;
