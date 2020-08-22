@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>TimeZone</title>
+    <script type="text/javascript" src="./TimeZone.js"></script>
+</head>
+<body>
+<script>
+// 本地时间
+console.log(TimeZone.getTimeZone());
+// 指定时间，东8区，北京零点时间戳
+console.log(TimeZone.getZeroByTimestamp(1598083972, -8));
+// 时间格式
+console.log(TimeZone.formatTimeStamp(1598083972, -8, 'YYYY-MM-dd'));
+console.log(TimeZone.formatTimeStamp(1598083972, -8, 'yyyy/MM/DD'));
+console.log(TimeZone.formatTimeStamp(1598083972, -8, 'yyyy/MM 00:00:00'));
+console.log(TimeZone.formatTimeStamp(1598083972, -8, 'yyyy/MM HH:mm:ss'));
+console.log(TimeZone.formatTimeStamp(1598083972, -1, 'yyyy/MM HH:mm:ss'));
+console.log(TimeZone.formatTimeStamp(1598083972, -1, 'mm:ss'));
+// 获取指定时间戳范围, 指定时区每天零点时间戳
+console.log(TimeZone.getDaysZeroList(1597911171, 1598083971, -8, 'YYYY/MM/DD HH:mm:ss'));
+</script>
+</body>
+</html>
+

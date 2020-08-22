@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>js字符编码转换test</title>
+    <script type="text/javascript" src="convert.js"></script>
+</head>
+<body>
+
+
+<script>
+// 十六进制转换为十进制NCR的规范
+var res1 = convertCP2DecNCR('6211');
+console.log(res1);
+
+// 字符转换为8位元（utf-8）表示
+// 0F
+var res3 = dec2hex2('15');
+console.log(res3);
+
+// 返回多种编码
+var res4 = convertChar2NCR('我js脚本语言编码');
+console.log(res4);
+
+// console.log(convertDecNCR2CP(res4.decNCR));
+
+var res5 = getCPfromChar('我');
+console.log(res5);
+
+var res7 = convertHex2EU("&#x6211;&#x6A;&#x73;&#x811A;&#x672C;&#x8BED;&#x8A00;&#x7F16;&#x7801;");
+console.log(res7);
+
+console.log(res4.UTF8);
+var res8 = convertUTF82CP(res4.UTF8);
+console.log(res8);
+
+</script>
+</body>
+</html>
+
