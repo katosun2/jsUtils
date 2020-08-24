@@ -1,14 +1,17 @@
 /* =============================================================================
 #     FileName: TimeZone.js
 #         Desc: JS时区处理方法   
-#      Version: 1.0.0
-#   LastChange: 2020-08-22 16:52:03
+#      Version: 1.0.1
+#   LastChange: 2020-08-24 09:39:16
 ============================================================================= */
 (function(){
   var TimeZone = window.TimeZone || {};
 
   // 默认时间格式
   TimeZone.formatStr = 'YYYY/MM/DD hh:mm:ss';
+
+  // 默认时区, 东8区
+  TimeZone.timeZone = -8;
 
   /**
    * 获取本地时区
@@ -33,7 +36,7 @@
     timestamp *= 1000;
     // 默认时间
     if(typeof timeZone === 'undefined'){
-      timeZone = -8;
+      timeZone = TimeZone.timeZone;
     }
 
     return Math.round((Math.floor((timestamp - timeZone * 60 * 60 * 1000)/(24 * 60 * 60 * 1000)) * 24 * 60 * 60 * 1000 + timeZone * 60 * 60 * 1000) / 1000);
@@ -51,7 +54,7 @@
     timestamp *= 1000;
     // 默认时间
     if(typeof timeZone === 'undefined'){
-      timeZone = -8;
+      timeZone = TimeZone.timeZone;
     }
     // 默认格式
     formatStr = formatStr || TimeZone.formatStr;
@@ -96,7 +99,7 @@
     endTimestamp *= 1000;
     // 默认时间
     if(typeof timeZone === 'undefined'){
-      timeZone = -8;
+      timeZone = TimeZone.timeZone;
     }
     // 默认格式
     formatStr = formatStr || TimeZone.formatStr;
@@ -129,7 +132,7 @@
   TimeZone.getWeekTimestamp = function(timestamp, timeZone, isMonday, weekNum, formatStr) {
     // 默认时间
     if(typeof timeZone === 'undefined'){
-      timeZone = -8;
+      timeZone = TimeZone.timeZone;
     }
     // 获取零点时间
     timestamp = TimeZone.getZeroByTimestamp(timestamp, timeZone);
